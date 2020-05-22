@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanghuadi.mapper.HeroMapper">
+
+
+	<update id="buy" parameterType="int">
+		update t_heros set
+		status = 1
+		where id=#{id}
+	</update>
+
+	<select id="queryHeroById" parameterType="int" resultType="com.wanghuadi.beans.Hero">
+		select h.*,c.cname from t_heros h , t_camp c where  h.cid = c.cid and h.id=#{0}
+	</select>
+
+	<select id="queryAll" parameterType="map" resultType="com.wanghuadi.beans.Hero">
+		 select h.*,c.cname from t_heros h , t_camp c where  h.cid = c.cid 
+		
+			<if test="cid != null and cid != ''">
+				and h.cid = #{cid}
+			</if>
+			<if test="status2 != null">
+				and h.status = #{status2}
+			</if>
+			<if test="startPrice != null and startPrice != ''">
+				and h.price >= #{startPrice}
+			</if>
+			<if test="endPrice != null and endPrice != ''">
+				and h.price &lt;= #{endPrice}
+			</if>
+	</select>
+	
+	<select id="queryCampAll" resultType="com.wanghuadi.beans.Camp">
+		select * from t_camp
+	</select>
+	
+	<insert id="insertHero" parameterType="com.wanghuadi.beans.Hero">
+		insert into t_heros
+		(name,price,cid,status,picurl,uptime)
+		values
+		(#{name},#{price},#{cid},#{status},#{picurl},now())
+	</insert>
+
+</mapper>
